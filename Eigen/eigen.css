@@ -1,0 +1,100 @@
+body {
+    margin-left: 20%;
+    margin-right: 20%;
+    text-align: justify;
+    text-justify: inter-ideograph;
+    font-family: 'HiraMinProN-W3', 'メイリオ', 'MS UI Gothic', serif;
+}
+
+p {
+    padding: 0;
+    margin:  0;
+    text-indent: 1em;
+}
+
+pre {
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+}
+
+pre.src {
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+#text-table-of-contents ul {
+    list-style-type: none;
+}
+
+h1 {
+    border-left: 20px solid #ff6666;
+    border-right: 20px solid #ff6666;
+}
+
+.outline-2 h2 {
+    border-bottom: 3px solid #ff6666;
+    border-left: 15px solid #ff6666;
+    margin-top: 0;
+    padding-left: 10px;
+    font-size: 130%;
+}
+
+#table-of-contents {
+    padding-bottom: 1.5em;
+}
+
+div.outline-2 {
+    padding-bottom: 1.5em;
+}
+
+.outline-3 h3 {
+    font-size: 110%;
+}
+
+.org-ul li {
+    padding-top:    2px;
+    padding-bottom: 8px;
+}
+
+table {
+    margin-top:    1em;
+    margin-bottom: 1em;
+    margin-left:   1.2em;
+    margin-right:  1.2em;
+    font-size:     90%;
+}
+
+tr:nth-child(even) {
+    background: #f8f8f8;
+}
+
+img {
+    max-width: 100%;
+    height: auto !important;
+}
+
+.figure {
+    line-height: 0;
+    border:   1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    font-family: monospace;
+    overflow: auto;
+    padding: 0;
+    margin-top:    1.0em;
+    margin-bottom: 1.5em;
+    margin-left:   0.5em;
+    margin-right:  0.5em;
+}
+
+.figure p {
+    margin:  0;
+    padding: 1em;
+    text-indent: 0em;
+}
+
+#copyright p {
+    margin-left:  0em;
+    margin-right: 0em;
+    text-indent: 0em;
+    font-size:   80%;
+}

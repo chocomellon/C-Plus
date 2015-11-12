@@ -1,0 +1,8 @@
+﻿2015/11/11 11:20:50 にビルドを開始しました。
+     1>ノード 2 上のプロジェクト "W:\git\OpenGL\08 Matrix\GameTemplate.vcxproj" (Build ターゲット)。
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.Cpp.Platform.targets(57,5): error MSB8020: The build tools for v120 (Platform Toolset = 'v120') cannot be found. To build using the v120 build tools, please install v120 build tools.  Alternatively, you may upgrade to the current Visual Studio tools by selecting the Project menu or right-click the solution, and then selecting "Retarget solution".
+     1>プロジェクト "W:\git\OpenGL\08 Matrix\GameTemplate.vcxproj" (Build ターゲット) のビルドが終了しました -- 失敗。
+
+ビルドに失敗しました。
+
+経過時間 00:00:00.03

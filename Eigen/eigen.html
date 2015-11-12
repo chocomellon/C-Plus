@@ -1,0 +1,836 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Eigenの使い方</title>
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="eigen.css" />
+</head>
+<body>
+<div id="content">
+<h1 class="title">Eigenの使い方</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. Eigenとは??</a></li>
+<li><a href="#sec-2">2. インストール</a></li>
+<li><a href="#sec-3">3. 最初のコード</a></li>
+<li><a href="#sec-4">4. ベクトル操作</a></li>
+<li><a href="#sec-5">5. 行列操作</a></li>
+<li><a href="#row_and_colmn">6. 行列の「行」と「列」</a></li>
+<li><a href="#sec-7">7. クォータニオン</a></li>
+<li><a href="#sec-8">8. アフィン変換</a></li>
+<li><a href="#sec-9">9. 2Dでの回転とか平行移動とか</a></li>
+<li><a href="#sec-10">10. OpenGLやDirectXへ行列を渡す</a></li>
+<li><a href="#sec-11">11. Arrayクラス</a></li>
+<li><a href="#sec-12">12. リファレンスマニュアル</a></li>
+<li><a href="#sec-13">13. あわせて読みたい</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Eigenとは??</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+行列やベクトルを効率よくC++で扱う為のライブラリです。「アイゲン」と読みます。このマニュアルでは、以下の内容を説明しています。
+</p>
+
+<ul class="org-ul">
+<li><b>ゲームでよく使われるであろうベクトル、行列操作についてのサンプルコード</b>
+</li>
+<li><b>OpenGLやDirectXとの連携</b>
+</li>
+</ul>
+
+<p>
+なお、マニュアルでは以下の事柄については言及しておりませんのでご容赦ください。
+</p>
+
+<ul class="org-ul">
+<li><b>ベクトルや行列の性質</b>
+</li>
+<li><b>Eigenの詳細な実装内容や最適化に関して</b>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> インストール</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+同梱のeigen-3.2.zipを解凍。自分のプロジェクトのソースファイルと同じ場所にeigen-3.2/Eigenを丸ごとコピーします。Eigenはヘッダのみで構成されているので、ビルドの必要はありまん。これで準備完了!!
+</p>
+
+
+<div class="figure">
+<p><img src="images/photo1.png" alt="photo1.png" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 最初のコード</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Eigenには数多くの定義済みベクトルと行列があります。とくに、以下の命名法則で用意されたものを使うとよいでしょう。
+</p>
+
+<ul class="org-ul">
+<li><b>ベクトル</b><br  />
+    Eigen::Vector[次元数][i, f, d]
+
+<ul class="org-ul">
+<li><b>Eigen::Vector2f</b> -&gt; float型の二次元ベクトル
+</li>
+<li><b>Eigen::Vector3d</b> -&gt; double型の三次元ベクトル
+</li>
+<li><b>Eigen::Vector4i</b> -&gt; int型の四次元ベクトル
+</li>
+</ul>
+</li>
+</ul>
+
+
+<ul class="org-ul">
+<li><b>行列</b><br  />
+    Eigen::Matrix[行と列の数][i, f, d]
+
+<ul class="org-ul">
+<li><b>Eigen::Matrix3f</b> -&gt; float型の3x3行列
+</li>
+<li><b>Eigen::Matrix4d</b> -&gt; double型の4x4行列
+</li>
+</ul>
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-c++"><span style="color: #007400;">// </span><span style="color: #007400;">Windows&#12391;&#12418;&#12375;&#35598;&#12398;&#12513;&#12514;&#12522;&#12450;&#12463;&#12475;&#12473;&#36949;&#21453;&#12364;&#30330;&#29983;&#12377;&#12427;&#22580;&#21512;&#12289;</span>
+<span style="color: #007400;">// </span><span style="color: #007400;">&#12513;&#12514;&#12522;&#12398;16&#12496;&#12452;&#12488;&#25972;&#21015;&#12434;&#31105;&#27490;&#12377;&#12427;&#12392;&#35299;&#27770;&#12377;&#12427;&#22580;&#21512;&#12364;&#12354;&#12427;</span>
+<span style="color: #007400;">//</span><span style="color: #007400;">#define EIGEN_DONT_ALIGN</span>
+
+<span style="color: #483d8b;">#include</span> <span style="color: #C41A16;">&lt;iostream&gt;</span>
+
+<span style="color: #007400;">// </span><span style="color: #007400;">Eigen&#12398;&#12467;&#12450;&#27231;&#33021;&#12392;&#12472;&#12458;&#12513;&#12488;&#12522;&#27231;&#33021;&#12434;&#20351;&#12358;</span>
+<span style="color: #483d8b;">#include</span> <span style="color: #C41A16;">"Eigen/Core"</span>
+<span style="color: #483d8b;">#include</span> <span style="color: #C41A16;">"Eigen/Geometry"</span>
+
+
+<span style="color: #3f6e74;">int</span> <span style="color: #0000ff;">main</span>() {
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#20197;&#19979;&#12469;&#12531;&#12503;&#12523;&#12467;&#12540;&#12489;&#12391;&#12399;&#21517;&#21069;&#31354;&#38291;Eigen&#12434;&#30465;&#30053;</span>
+  <span style="color: #a020f0;">using</span> <span style="color: #a020f0;">namespace</span> <span style="color: #008b8b;">Eigen</span>;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#20108;&#27425;&#20803;&#12505;&#12463;&#12488;&#12523;v1&#12398;&#23450;&#32681;&#12290;&#21021;&#26399;&#20516;&#12399;&#26410;&#23450;&#32681;</span>
+  <span style="color: #3f6e74;">Vector2f</span> <span style="color: #a0522d;">v1</span>;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#21021;&#26399;&#21270;&#12399;&#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;&#12391;&#25351;&#23450;&#12391;&#12365;&#12427;</span>
+  <span style="color: #3f6e74;">Vector2f</span> <span style="color: #a0522d;">v2</span>(1.0f, 0.5f);
+  <span style="color: #3f6e74;">Vector3f</span> <span style="color: #a0522d;">v3</span>(0.0f, 1.0f, -1.0f);
+
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"v2\n"</span> &lt;&lt; v2 &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"v3\n"</span> &lt;&lt; v3 &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">double&#22411;3x3&#34892;&#21015;&#12398;&#23450;&#32681;&#12290;&#21021;&#26399;&#20516;&#12399;&#26410;&#23450;&#32681;</span>
+  <span style="color: #3f6e74;">Matrix3d</span> <span style="color: #a0522d;">m</span>;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#34892;&#21015;&#12398;&#21021;&#26399;&#20516;&#12399;&#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;&#12391;&#25351;&#23450;&#12391;&#12365;&#12394;&#12356;&#12398;&#12391;&#12289;</span>
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#20516;&#12399;&#20197;&#19979;&#12398;&#12424;&#12358;&#12395;&#12414;&#12392;&#12417;&#12390;&#20195;&#20837;&#12377;&#12427;</span>
+  m &lt;&lt; 1.0, 0.0, 0.0,
+       0.0, 1.0, 0.0,
+       0.0, 0.0, 1.0;
+
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"m\n"</span> &lt;&lt; m &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> ベクトル操作</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+加減算、内積、外積、正規化など一通りの計算はこんな感じに書けます。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-c++"><span style="color: #483d8b;">#include</span> <span style="color: #C41A16;">&lt;iostream&gt;</span>
+<span style="color: #483d8b;">#include</span> <span style="color: #C41A16;">"Eigen/Core"</span>
+<span style="color: #483d8b;">#include</span> <span style="color: #C41A16;">"Eigen/Geometry"</span>
+
+<span style="color: #3f6e74;">int</span> <span style="color: #0000ff;">main</span>() {
+  <span style="color: #a020f0;">using</span> <span style="color: #a020f0;">namespace</span> <span style="color: #008b8b;">Eigen</span>;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#19977;&#27425;&#20803;&#12505;&#12463;&#12488;&#12523;&#12398;&#23450;&#32681;&#12290;&#21021;&#26399;&#20516;&#12399;&#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;&#12391;&#25351;&#23450;</span>
+  <span style="color: #3f6e74;">Vector3f</span> <span style="color: #a0522d;">v1</span>( 0.0f,  1.0f,  2.0f);
+  <span style="color: #3f6e74;">Vector3f</span> <span style="color: #a0522d;">v2</span>(-0.5f,  2.0f, -1.5f);
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#21508;&#35201;&#32032;&#12408;&#12398;&#35501;&#12415;&#26360;&#12365;</span>
+  <span style="color: #3f6e74;">float</span> <span style="color: #a0522d;">x</span>, <span style="color: #a0522d;">y</span>, <span style="color: #a0522d;">z</span>;
+  x = v1.x();
+  y = v1.y();
+  z = v1.z();
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"x:"</span> &lt;&lt; x &lt;&lt; <span style="color: #C41A16;">" y:"</span> &lt;&lt; y &lt;&lt; <span style="color: #C41A16;">" z:"</span> &lt;&lt; z &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+
+  v1.x() = x;
+  v1.y() = y;
+  v1.z() = z;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#35501;&#12415;&#26360;&#12365;&#12399;&#12289;&#12371;&#12358;&#12356;&#12358;&#26360;&#12365;&#26041;&#12418;&#12391;&#12365;&#12427;</span>
+  v1(0) = x;
+  v1(1) = y;
+  v1(2) = z;
+
+  x = v1[0];
+  y = v1[1];
+  z = v1[2];
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#12371;&#12358;&#12356;&#12358;&#20195;&#20837;&#12418;&#21487;&#33021;</span>
+  v1 &lt;&lt; 0.5f, 1.2f, -2.0f;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#12467;&#12500;&#12540;</span>
+  <span style="color: #3f6e74;">Vector3f</span> <span style="color: #a0522d;">v0</span>;
+  v0 = v1;
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"v0\n"</span> &lt;&lt; v0 &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"v1\n"</span> &lt;&lt; v1 &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#21152;&#31639;</span>
+  <span style="color: #3f6e74;">Vector3f</span> <span style="color: #a0522d;">v3</span>;
+  v3 = v1 + v2;
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"v3\n"</span> &lt;&lt; v3 &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#28187;&#31639;</span>
+  <span style="color: #3f6e74;">Vector3f</span> <span style="color: #a0522d;">v4</span>;
+  v4 = v2 - v1;
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"v4\n"</span> &lt;&lt; v4 &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#21508;&#35201;&#32032;&#12434;&#20055;&#31639;(&#12505;&#12463;&#12488;&#12523;&#21516;&#22763;&#12398;&#20055;&#31639;&#12289;&#38500;&#31639;&#12399;&#28961;&#12356;)</span>
+  <span style="color: #3f6e74;">Vector3f</span> <span style="color: #a0522d;">v5</span>;
+  v5 = v1 * 2.0f;
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"v5\n"</span> &lt;&lt; v5 &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#21508;&#35201;&#32032;&#12434;&#38500;&#31639;</span>
+  <span style="color: #3f6e74;">Vector3f</span> <span style="color: #a0522d;">v6</span>;
+  v6 = v2 / 2.0f;
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"v6\n"</span> &lt;&lt; v6 &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#20869;&#31309;</span>
+  <span style="color: #3f6e74;">float</span> <span style="color: #a0522d;">dot</span> = v1.dot(v2);
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"dot v1, v2\n"</span> &lt;&lt; dot &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#22806;&#31309;</span>
+  <span style="color: #3f6e74;">Vector3f</span> <span style="color: #a0522d;">cross</span>;
+  cross = v1.cross(v2);
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"cross v1, v2\n"</span> &lt;&lt; cross &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#12505;&#12463;&#12488;&#12523;&#12398;&#38263;&#12373;</span>
+  <span style="color: #3f6e74;">float</span> <span style="color: #a0522d;">norm</span> = v1.norm();
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"v1.norm "</span> &lt;&lt; norm &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#27491;&#35215;&#21270;(&#38263;&#12373;1)&#12375;&#12383;&#12505;&#12463;&#12488;&#12523;&#12434;&#29983;&#25104;</span>
+  <span style="color: #3f6e74;">Vector3f</span> <span style="color: #a0522d;">n</span>;
+  n = v1.normalized();
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"normalized\n"</span> &lt;&lt; n &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#12505;&#12463;&#12488;&#12523;&#12434;&#27491;&#35215;&#21270;&#12377;&#12427;</span>
+  v1.normalize();
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"normalize v1\n"</span> &lt;&lt; v1 &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#12354;&#12425;&#12363;&#12376;&#12417;&#29992;&#24847;&#12373;&#12428;&#12390;&#12356;&#12427;&#20516;</span>
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#21336;&#20301;&#12505;&#12463;&#12488;&#12523;(1, 0, 0)</span>
+  <span style="color: #3f6e74;">Vector3f</span> <span style="color: #a0522d;">identity</span> = <span style="color: #008b8b;">Vector3f</span>::Identity();
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; identity &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">(0, 0, 0)</span>
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #008b8b;">Vector3f</span>::Zero() &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">(1, 1, 1)</span>
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #008b8b;">Vector3f</span>::Ones() &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">(1, 0, 0)</span>
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #008b8b;">Vector3f</span>::UnitX() &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">(0, 1, 0)</span>
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #008b8b;">Vector3f</span>::UnitY() &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">(0, 0, 1)</span>
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #008b8b;">Vector3f</span>::UnitZ() &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#12521;&#12531;&#12480;&#12512;&#12394;&#20516;</span>
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #008b8b;">Vector3f</span>::Random() &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> 行列操作</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+行列の操作はこんな感じに書けます。Eigenではベクトルも行列もほぼ同じ感覚で扱えるように設計されています。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-c++"><span style="color: #483d8b;">#include</span> <span style="color: #C41A16;">&lt;iostream&gt;</span>
+<span style="color: #483d8b;">#include</span> <span style="color: #C41A16;">"Eigen/Core"</span>
+<span style="color: #483d8b;">#include</span> <span style="color: #C41A16;">"Eigen/Geometry"</span>
+
+<span style="color: #3f6e74;">int</span> <span style="color: #0000ff;">main</span>() {
+  <span style="color: #a020f0;">using</span> <span style="color: #a020f0;">namespace</span> <span style="color: #008b8b;">Eigen</span>;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#34892;&#21015;&#12398;&#22580;&#21512;&#12399;&#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;&#12391;&#21508;&#35201;&#32032;&#12398;&#20516;&#12434;&#20491;&#21029;&#12395;&#21021;&#26399;&#21270;&#20986;&#26469;&#12394;&#12356;</span>
+  <span style="color: #3f6e74;">Matrix3f</span> <span style="color: #a0522d;">m1</span>;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#12354;&#12425;&#12363;&#12376;&#12417;&#29992;&#24847;&#12373;&#12428;&#12383;&#12300;&#21336;&#20301;&#34892;&#21015;&#12301;&#12300;&#20840;&#12390;0&#12301;&#12300;&#20840;&#12390;1&#12301;&#12420;&#12289;&#20182;&#12398;&#34892;&#21015;&#12434;&#28193;&#12377;&#26041;&#27861;&#12399;&#21487;&#33021;</span>
+  <span style="color: #3f6e74;">Matrix3f</span> <span style="color: #a0522d;">m2</span>(<span style="color: #008b8b;">Matrix3f</span>::<span style="color: #3f6e74;">Identity</span>());
+  <span style="color: #3f6e74;">Matrix3f</span> <span style="color: #a0522d;">m3</span>(<span style="color: #008b8b;">Matrix3f</span>::<span style="color: #3f6e74;">Zero</span>());
+  <span style="color: #3f6e74;">Matrix3f</span> <span style="color: #a0522d;">m4</span>(<span style="color: #008b8b;">Matrix3f</span>::<span style="color: #3f6e74;">Ones</span>());
+  <span style="color: #3f6e74;">Matrix3f</span> <span style="color: #a0522d;">m5</span>(m4);
+  <span style="color: #3f6e74;">Matrix3f</span> <span style="color: #a0522d;">m6</span>(<span style="color: #008b8b;">Matrix3f</span>::<span style="color: #3f6e74;">Random</span>());
+
+  {
+    <span style="color: #007400;">// </span><span style="color: #007400;">&#21508;&#35201;&#32032;&#12395;&#12414;&#12392;&#12417;&#12390;&#20516;&#12434;&#12467;&#12500;&#12540;&#12377;&#12427;</span>
+    <span style="color: #3f6e74;">Matrix3f</span> <span style="color: #a0522d;">m</span>;
+    m &lt;&lt;  1.0f,  0.0f, 1.0f,
+   -1.0f,  0.5f, 0.0f,
+    2.0f, -5.0f, 2.5f;
+
+    <span style="color: #008b8b;">std</span>::cout &lt;&lt; m &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+  }
+
+  {
+    <span style="color: #007400;">// </span><span style="color: #007400;">&#34892;&#21015;&#12398;&#35201;&#32032;&#12408;&#12398;&#12450;&#12463;&#12475;&#12473;</span>
+    <span style="color: #007400;">// </span><span style="color: #007400;">matrix(&#21015;, &#34892;)</span>
+    <span style="color: #007400;">// </span><span style="color: #007400;">&#12300;&#34892;&#12301;&#12364;&#27178;&#26041;&#21521;&#12398;&#12452;&#12531;&#12487;&#12483;&#12463;&#12473;</span>
+    <span style="color: #007400;">// </span><span style="color: #007400;">&#12300;&#21015;&#12301;&#12364;&#32294;&#26041;&#21521;&#12398;&#12452;&#12531;&#12487;&#12483;&#12463;&#12473;</span>
+    <span style="color: #007400;">// </span><span style="color: #007400;">m2[0, 1] &#12420; m2[0][1] &#12394;&#12393;&#12398;&#26360;&#12365;&#26041;&#12399;&#12391;&#12365;&#12394;&#12356;</span>
+    m2(2, 0) = 1.0f;
+    <span style="color: #3f6e74;">float</span> <span style="color: #a0522d;">value</span> = m2(0, 2);
+  }
+
+  {
+    <span style="color: #3f6e74;">Matrix3f</span> <span style="color: #a0522d;">m</span>;
+
+    <span style="color: #007400;">// </span><span style="color: #007400;">&#21152;&#31639;</span>
+    m = m2 + m4;
+    <span style="color: #008b8b;">std</span>::cout &lt;&lt; m &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+
+    <span style="color: #007400;">// </span><span style="color: #007400;">&#28187;&#31639;</span>
+    m = m2 - m4;
+    <span style="color: #008b8b;">std</span>::cout &lt;&lt; m &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+
+    <span style="color: #007400;">// </span><span style="color: #007400;">&#21508;&#35201;&#32032;&#12408;&#12398;&#20055;&#31639;</span>
+    m = m2 * 2.0f;
+    <span style="color: #008b8b;">std</span>::cout &lt;&lt; m &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+
+    <span style="color: #007400;">// </span><span style="color: #007400;">&#21508;&#35201;&#32032;&#12408;&#12398;&#28187;&#31639;</span>
+    m = m2 / 2.0f;
+    <span style="color: #008b8b;">std</span>::cout &lt;&lt; m &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+
+    <span style="color: #007400;">// </span><span style="color: #007400;">&#34892;&#21015;&#21516;&#22763;&#12398;&#20055;&#31639;</span>
+    m = m2 * m4;
+    <span style="color: #008b8b;">std</span>::cout &lt;&lt; m &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+  }
+
+  {
+    <span style="color: #007400;">// </span><span style="color: #007400;">&#36870;&#34892;&#21015;</span>
+    <span style="color: #3f6e74;">Matrix3f</span> <span style="color: #a0522d;">m</span>(<span style="color: #008b8b;">Matrix3f</span>::<span style="color: #3f6e74;">Random</span>());
+    <span style="color: #3f6e74;">Matrix3f</span> <span style="color: #a0522d;">m_tmp</span> = m.inverse();
+    <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"inverse:\n"</span> &lt;&lt; m_tmp &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+
+    <span style="color: #007400;">// </span><span style="color: #007400;">&#20849;&#24441;&#34892;&#21015;</span>
+    m_tmp =  m.conjugate();
+    <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"conjugate:\n"</span> &lt;&lt; m_tmp &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+  }
+
+  {
+    <span style="color: #007400;">// </span><span style="color: #007400;">4x4&#34892;&#21015;&#12398;&#19968;&#37096;&#12434;&#20999;&#12426;&#21462;&#12387;&#12390;3x3&#34892;&#21015;&#12408;&#12467;&#12500;&#12540;</span>
+    <span style="color: #007400;">// </span><span style="color: #007400;">| a b c d |    | a b c |</span>
+    <span style="color: #007400;">// </span><span style="color: #007400;">| e f g h | -&gt; | e f g |</span>
+    <span style="color: #007400;">// </span><span style="color: #007400;">| i j k l |    | i j k |</span>
+    <span style="color: #007400;">// </span><span style="color: #007400;">| m n o p |</span>
+    <span style="color: #3f6e74;">Matrix4f</span> <span style="color: #a0522d;">m_4x4</span>;
+    m_4x4 &lt;&lt;  0.0f,  1.0f,  2.0f,  3.0f,
+        4.0f,  5.0f,  6.0f,  7.0f,
+        8.0f,  9.0f, 10.0f, 11.0f,
+       12.0f, 13.0f, 14.0f, 15.0f;
+
+    <span style="color: #3f6e74;">Matrix3f</span> <span style="color: #a0522d;">m_3x3</span> = m_4x4.block(0, 0, 3, 3);
+    <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"4x4 -&gt; 3x3\n"</span> &lt;&lt; m_3x3 &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+
+    <span style="color: #007400;">// </span><span style="color: #007400;">4x4&#34892;&#21015;&#12398;&#19968;&#37096;&#12434;&#20999;&#12426;&#21462;&#12387;&#12390;&#12505;&#12463;&#12488;&#12523;&#12408;&#12467;&#12500;&#12540;</span>
+    <span style="color: #007400;">// </span><span style="color: #007400;">| a b c d |</span>
+    <span style="color: #007400;">// </span><span style="color: #007400;">| e f g h | -&gt; | g k o |</span>
+    <span style="color: #007400;">// </span><span style="color: #007400;">| i j k l |</span>
+    <span style="color: #007400;">// </span><span style="color: #007400;">| m n o p |</span>
+    <span style="color: #3f6e74;">Vector3f</span> <span style="color: #a0522d;">v</span> = m_4x4.block(1, 2, 3, 1);
+    <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"4x4 -&gt; 3\n"</span> &lt;&lt; v &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+  }
+
+  {
+    <span style="color: #007400;">// </span><span style="color: #007400;">&#36578;&#32622;&#34892;&#21015;</span>
+    <span style="color: #007400;">// </span><span style="color: #007400;">| a b c |    | a d g |</span>
+    <span style="color: #007400;">// </span><span style="color: #007400;">| d e f | -&gt; | b e h |</span>
+    <span style="color: #007400;">// </span><span style="color: #007400;">| g h i |    | c f i |</span>
+    <span style="color: #3f6e74;">Matrix3i</span> <span style="color: #a0522d;">m</span>;
+    m &lt;&lt; 1, 2, 3,
+   4, 5, 6,
+   7, 8, 9;
+    <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"transpose:\n"</span> &lt;&lt; m.transpose() &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+  }
+}
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-row_and_colmn" class="outline-2">
+<h2 id="row_and_colmn"><a id="sec-6"></a><span class="section-number-2">6</span> 行列の「行」と「列」</h2>
+<div class="outline-text-2" id="text-row_and_colmn">
+<p>
+Eigenは「行(row)」と「列(colmn)」の各要素が以下のように格納されています。これを『「列」優先(colmn major)』といいます。
+</p>
+
+<pre class="example">
+| a b c |
+| d e f | -&gt; { a, d, g, b, e, h, c, f, i }
+| g h i |
+</pre>
+
+<p>
+これを『「行」優先(row major)』にする場合は、以下のサンプルコードのように自分で行列の定義を行います。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-c++"><span style="color: #483d8b;">#include</span> <span style="color: #C41A16;">&lt;iostream&gt;</span>
+<span style="color: #483d8b;">#include</span> <span style="color: #C41A16;">"Eigen/Core"</span>
+<span style="color: #483d8b;">#include</span> <span style="color: #C41A16;">"Eigen/Geometry"</span>
+
+<span style="color: #3f6e74;">int</span> <span style="color: #0000ff;">main</span>() {
+  <span style="color: #a020f0;">using</span> <span style="color: #a020f0;">namespace</span> <span style="color: #008b8b;">Eigen</span>;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">int&#22411;&#12289;3x3&#12289;&#12300;&#34892;&#12301;&#20778;&#20808;&#12398;&#34892;&#21015;&#12434;&#23450;&#32681;</span>
+  <span style="color: #a020f0;">typedef</span> <span style="color: #3f6e74;">Matrix</span>&lt;<span style="color: #3f6e74;">int</span>, 3, 3, RowMajor&gt; <span style="color: #3f6e74;">Mat3i</span>;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">Eigen&#12398;&#12487;&#12501;&#12457;&#12523;&#12488;&#12399;&#12300;&#21015;&#12301;&#20778;&#20808;(ColMajor&#12399;&#30465;&#30053;&#12391;&#12365;&#12427;)</span>
+  <span style="color: #007400;">// </span><span style="color: #007400;">typedef Matrix&lt;int, 3, 3, ColMajor&gt; Mat3i;</span>
+
+  <span style="color: #3f6e74;">Mat3i</span> <span style="color: #a0522d;">m</span>;
+  m &lt;&lt; 1, 2, 3,
+       4, 5, 6,
+       7, 8, 9;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#12300;&#34892;&#12301;&#20778;&#20808;&#12398;&#22580;&#21512;&#12399; 1, 2, 3, 4, 5, 6, 7, 8, 9</span>
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#12300;&#21015;&#12301;&#20778;&#20808;&#12398;&#22580;&#21512;&#12399; 1, 4, 7, 2, 5, 8, 3, 6, 9 &#12392;&#12394;&#12427;</span>
+  <span style="color: #a020f0;">const</span> <span style="color: #3f6e74;">int</span>* <span style="color: #a0522d;">data</span> = m.data();
+  <span style="color: #a020f0;">for</span> (<span style="color: #3f6e74;">int</span> <span style="color: #a0522d;">i</span> = 0; i &lt; 9; ++i) {
+    <span style="color: #008b8b;">std</span>::cout &lt;&lt; data[i] &lt;&lt; <span style="color: #C41A16;">" "</span>;  
+  }
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-7" class="outline-2">
+<h2 id="sec-7"><span class="section-number-2">7</span> クォータニオン</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+クォータニオンは以下のように扱います。Eigenであれば、かなり直感的にクォータニオンも扱えます。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-c++"><span style="color: #483d8b;">#include</span> <span style="color: #C41A16;">&lt;iostream&gt;</span>
+<span style="color: #483d8b;">#include</span> <span style="color: #C41A16;">"Eigen/Core"</span>
+<span style="color: #483d8b;">#include</span> <span style="color: #C41A16;">"Eigen/Geometry"</span>
+
+<span style="color: #3f6e74;">int</span> <span style="color: #0000ff;">main</span>() {
+  <span style="color: #a020f0;">using</span> <span style="color: #a020f0;">namespace</span> <span style="color: #008b8b;">Eigen</span>;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#22793;&#25968;&#12434;&#23450;&#32681;&#12290;&#20516;&#12399;&#26410;&#23450;&#32681;</span>
+  <span style="color: #3f6e74;">Quaternionf</span> <span style="color: #a0522d;">q1</span>;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;&#12391;&#20516;(w, x, y, z)&#12434;&#28193;&#12375;&#12390;&#21021;&#26399;&#21270;</span>
+  <span style="color: #3f6e74;">Quaternionf</span> <span style="color: #a0522d;">q2</span>(1.0f, 0.0f, 0.25f, 0.5f);
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; q2.x() &lt;&lt; <span style="color: #C41A16;">","</span> &lt;&lt; q2.y() &lt;&lt; <span style="color: #C41A16;">","</span> &lt;&lt; q2.z() &lt;&lt; <span style="color: #C41A16;">","</span> &lt;&lt; q2.w() &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;&#12391;&#35282;&#24230;&#12392;&#12505;&#12463;&#12488;&#12523;&#12434;&#28193;&#12375;&#12390;&#21021;&#26399;&#21270;</span>
+  <span style="color: #3f6e74;">Quaternionf</span> <span style="color: #a0522d;">q3</span>(AngleAxisf(0.1f, <span style="color: #008b8b;">Vector3f</span>::<span style="color: #3f6e74;">UnitY</span>()));
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#65298;&#12388;&#12398;&#12505;&#12463;&#12488;&#12523;&#12363;&#12425;&#12463;&#12458;&#12540;&#12479;&#12491;&#12458;&#12531;&#12434;&#27714;&#12417;&#12427;</span>
+  <span style="color: #3f6e74;">Quaternionf</span> <span style="color: #a0522d;">q4</span> = <span style="color: #008b8b;">Quaternionf</span>::FromTwoVectors(<span style="color: #008b8b;">Vector3f</span>::UnitX(), <span style="color: #008b8b;">Vector3f</span>::UnitZ());
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#21336;&#20301;&#12463;&#12458;&#12540;&#12479;&#12491;&#12458;&#12531;(0, 0, 0, 1)</span>
+  q4 = <span style="color: #008b8b;">Quaternionf</span>::Identity();
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; q4.x() &lt;&lt; <span style="color: #C41A16;">","</span> &lt;&lt; q4.y() &lt;&lt; <span style="color: #C41A16;">","</span> &lt;&lt; q4.z() &lt;&lt; <span style="color: #C41A16;">","</span> &lt;&lt; q4.w() &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#20055;&#31639;</span>
+  <span style="color: #3f6e74;">Quaternionf</span> <span style="color: #a0522d;">q_mul</span> = q2 * q3;
+
+  {
+    <span style="color: #007400;">// </span><span style="color: #007400;">&#36870;&#12463;&#12458;&#12540;&#12479;&#12491;&#12458;&#12531;&#12434;&#27714;&#12417;&#12427;</span>
+    <span style="color: #3f6e74;">Quaternionf</span> <span style="color: #a0522d;">q</span> = q4.inverse();
+    <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"Inverse:"</span> &lt;&lt; q.x() &lt;&lt; <span style="color: #C41A16;">","</span> &lt;&lt; q.y() &lt;&lt; <span style="color: #C41A16;">","</span> &lt;&lt; q.z() &lt;&lt; <span style="color: #C41A16;">","</span> &lt;&lt; q.w() &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+  }
+
+  {  
+    <span style="color: #007400;">// </span><span style="color: #007400;">&#20849;&#24441;&#12463;&#12458;&#12540;&#12479;&#12491;&#12458;&#12531;&#12434;&#27714;&#12417;&#12427;</span>
+    <span style="color: #3f6e74;">Quaternionf</span> <span style="color: #a0522d;">q</span> = q4.conjugate();
+    <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"Conjugate:"</span> &lt;&lt; q.x() &lt;&lt; <span style="color: #C41A16;">","</span> &lt;&lt; q.y() &lt;&lt; <span style="color: #C41A16;">","</span> &lt;&lt; q.z() &lt;&lt; <span style="color: #C41A16;">","</span> &lt;&lt; q.w() &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+  }
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#20869;&#31309;</span>
+  <span style="color: #3f6e74;">float</span> <span style="color: #a0522d;">dot</span> = q3.dot(q4);
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#22238;&#36578;&#12505;&#12463;&#12488;&#12523;&#12398;&#38263;&#12373;</span>
+  <span style="color: #3f6e74;">float</span> <span style="color: #a0522d;">norm</span> = q3.norm();
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#27491;&#35215;&#21270;</span>
+  q3.normalize();
+  <span style="color: #3f6e74;">Quaternionf</span> <span style="color: #a0522d;">q_normalized</span> = q4.normalized();
+
+  {
+    <span style="color: #007400;">// </span><span style="color: #007400;">&#29699;&#38754;&#32218;&#24418;&#35036;&#38291;</span>
+    <span style="color: #007400;">// </span><span style="color: #007400;">q3&#8594;q4&#12434; t[0, 1.0] &#12391;&#35036;&#38291;&#12377;&#12427;</span>
+    <span style="color: #3f6e74;">float</span> <span style="color: #a0522d;">t</span> = 0.5f;
+    <span style="color: #3f6e74;">Quaternionf</span> <span style="color: #a0522d;">q</span> = q3.slerp(t, q4);
+  }
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-8" class="outline-2">
+<h2 id="sec-8"><span class="section-number-2">8</span> アフィン変換</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+ベクトル、行列、クォータニオンを連携して使う事で、3D空間での座標変換が簡単に行えます。Eigenでは、アフィン変換を専用に定義された型(内部は4x4行列)を使って行います。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-c++"><span style="color: #483d8b;">#include</span> <span style="color: #C41A16;">&lt;iostream&gt;</span>
+<span style="color: #483d8b;">#include</span> <span style="color: #C41A16;">"Eigen/Core"</span>
+<span style="color: #483d8b;">#include</span> <span style="color: #C41A16;">"Eigen/Geometry"</span>
+
+<span style="color: #3f6e74;">int</span> <span style="color: #0000ff;">main</span>() {
+  <span style="color: #a020f0;">using</span> <span style="color: #a020f0;">namespace</span> <span style="color: #008b8b;">Eigen</span>;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#24179;&#34892;&#31227;&#21205;(x, y, z)</span>
+  <span style="color: #3f6e74;">Translation</span>&lt;<span style="color: #3f6e74;">float</span>, 3&gt; <span style="color: #a0522d;">translation</span> = <span style="color: #3f6e74;">Translation</span>&lt;<span style="color: #3f6e74;">float</span>, 3&gt;(10.0f, 0.5f, -3.0f);
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#12473;&#12465;&#12540;&#12522;&#12531;&#12464;</span>
+  <span style="color: #3f6e74;">DiagonalMatrix</span>&lt;<span style="color: #3f6e74;">float</span>, 3&gt; <span style="color: #a0522d;">scaling</span> = Scaling(2.0f, 1.5f, 1.0f);
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#22238;&#36578;(&#12463;&#12457;&#12540;&#12479;&#12491;&#12458;&#12531;)</span>
+  <span style="color: #3f6e74;">Quaternionf</span> <span style="color: #a0522d;">rotate</span>(AngleAxisf(0.2f, <span style="color: #008b8b;">Vector3f</span>::<span style="color: #3f6e74;">UnitY</span>()));
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#12450;&#12501;&#12451;&#12531;&#22793;&#25563;&#29992;&#34892;&#21015;</span>
+  <span style="color: #3f6e74;">Affine3f</span> <span style="color: #a0522d;">matrix</span>;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#21508;&#35201;&#32032;&#12434;&#25499;&#12369;&#21512;&#12431;&#12379;&#12390;&#12356;&#12369;&#12400;&#12289;&#26368;&#32066;&#30340;&#12394;&#22793;&#25563;&#34892;&#21015;&#12364;&#27714;&#12414;&#12427;</span>
+  matrix = translation * scaling * rotate;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">p0&#12434;&#22793;&#25563;&#34892;&#21015;&#12391;&#22793;&#25563;&#12375;&#12390;p1&#12395;&#26684;&#32013;</span>
+  <span style="color: #3f6e74;">Vector3f</span> <span style="color: #a0522d;">p0</span>(1.0f, -1.0f, 0.5f);
+  <span style="color: #3f6e74;">Vector3f</span> <span style="color: #a0522d;">p1</span> = matrix * p0;
+
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"p0\n"</span> &lt;&lt; p0 &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"p1\n"</span> &lt;&lt; p1 &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+
+  {
+    <span style="color: #007400;">// </span><span style="color: #007400;">&#12463;&#12457;&#12540;&#12479;&#12491;&#12458;&#12531;&#12384;&#12369;&#12391;&#12398;&#24231;&#27161;&#22793;&#25563;&#12418;&#21487;&#33021;</span>
+    <span style="color: #3f6e74;">Quaternionf</span> <span style="color: #a0522d;">q</span>(AngleAxisf(0.1f, <span style="color: #008b8b;">Vector3f</span>::<span style="color: #3f6e74;">UnitY</span>()));
+    <span style="color: #3f6e74;">Vector3f</span> <span style="color: #a0522d;">v1</span>(1.0f, 0.0f, -1.0f);
+
+    <span style="color: #3f6e74;">Vector3f</span> <span style="color: #a0522d;">v2</span> = q * v1;
+    <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"q * v1\n"</span> &lt;&lt; v2 &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+  }
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#34892;&#21015;(&#20869;&#37096;&#12399;4x4&#12398;&#34892;&#21015;)&#12398;&#21508;&#35201;&#32032;&#12408;&#12398;&#30452;&#25509;&#35501;&#12415;&#26360;&#12365;</span>
+  matrix(0, 0) = 1.0f;
+  <span style="color: #3f6e74;">float</span> <span style="color: #a0522d;">value</span> = matrix(1, 1);
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#27726;&#29992;&#30340;&#12394;&#34892;&#21015;&#12408;&#12398;&#22793;&#25563;&#12395;&#12399;&#12513;&#12531;&#12496;&#38306;&#25968;matrix&#12434;&#20351;&#12358;</span>
+  <span style="color: #a020f0;">const</span> <span style="color: #3f6e74;">Matrix4f</span>&amp; <span style="color: #a0522d;">m</span> = matrix.matrix();
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-9" class="outline-2">
+<h2 id="sec-9"><span class="section-number-2">9</span> 2Dでの回転とか平行移動とか</h2>
+<div class="outline-text-2" id="text-9">
+<p>
+Eigenでは、2Dでの座標変換も用意されています。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-c++"><span style="color: #483d8b;">#include</span> <span style="color: #C41A16;">&lt;iostream&gt;</span>
+<span style="color: #483d8b;">#include</span> <span style="color: #C41A16;">"Eigen/Core"</span>
+<span style="color: #483d8b;">#include</span> <span style="color: #C41A16;">"Eigen/Geometry"</span>
+
+<span style="color: #3f6e74;">int</span> <span style="color: #0000ff;">main</span>() {
+  <span style="color: #a020f0;">using</span> <span style="color: #a020f0;">namespace</span> <span style="color: #008b8b;">Eigen</span>;
+
+  <span style="color: #3f6e74;">Vector2f</span> <span style="color: #a0522d;">v1</span>(1.0f, 0.0f);
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#22238;&#36578;</span>
+  <span style="color: #3f6e74;">Rotation2Df</span> <span style="color: #a0522d;">rotate</span>(3.1415f);
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#24179;&#34892;&#31227;&#21205;</span>
+  <span style="color: #3f6e74;">Translation</span>&lt;<span style="color: #3f6e74;">float</span>, 2&gt; <span style="color: #a0522d;">translation</span> = <span style="color: #3f6e74;">Translation</span>&lt;<span style="color: #3f6e74;">float</span>, 2&gt;(10.0f, 0.5f);
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#12473;&#12465;&#12540;&#12522;&#12531;&#12464;</span>
+  <span style="color: #3f6e74;">DiagonalMatrix</span>&lt;<span style="color: #3f6e74;">float</span>, 2&gt; <span style="color: #a0522d;">scaling</span> = Scaling(2.0f, 1.5f);
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#27178;&#30528;&#12375;&#12390;&#22793;&#25563;&#34892;&#21015;&#12398;&#35336;&#31639;&#12392;&#12505;&#12463;&#12488;&#12523;&#12398;&#35336;&#31639;&#12434;&#12414;&#12392;&#12417;&#12390;&#26360;&#12369;&#12427;</span>
+  <span style="color: #3f6e74;">Vector2f</span> <span style="color: #a0522d;">v2</span> = rotate * translation * scaling * v1;
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; v2 &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#19968;&#26086;&#34892;&#21015;&#12395;&#12375;&#12383;&#12356;&#22580;&#21512;</span>
+  <span style="color: #3f6e74;">Affine2f</span> <span style="color: #a0522d;">m</span>;
+  m = rotate * translation * scaling;
+
+  <span style="color: #3f6e74;">Vector2f</span> <span style="color: #a0522d;">v3</span> = m * v1;
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; v3 &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-10" class="outline-2">
+<h2 id="sec-10"><span class="section-number-2">10</span> OpenGLやDirectXへ行列を渡す</h2>
+<div class="outline-text-2" id="text-10">
+<p>
+OpenGLやDirectXでは、4x4の行列が連続してメモリに並んだ配列を要求しますが、Eigenの場合はメンバ関数を使って簡単に取り出せます。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-c++"><span style="color: #483d8b;">#include</span> <span style="color: #C41A16;">&lt;GL/gl.h&gt;</span>
+<span style="color: #007400;">// </span><span style="color: #007400;">OSX&#12398;&#22580;&#21512;&#12497;&#12473;&#12364;&#36949;&#12358;</span>
+<span style="color: #007400;">//</span><span style="color: #007400;">#include &lt;OpenGL/gl.h&gt;</span>
+<span style="color: #483d8b;">#include</span> <span style="color: #C41A16;">"Eigen/Core"</span>
+<span style="color: #483d8b;">#include</span> <span style="color: #C41A16;">"Eigen/Geometry"</span>
+
+<span style="color: #3f6e74;">int</span> <span style="color: #0000ff;">main</span>() {
+  <span style="color: #a020f0;">using</span> <span style="color: #a020f0;">namespace</span> <span style="color: #008b8b;">Eigen</span>;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#27726;&#29992;&#30340;&#12394;&#34892;&#21015;&#12398;&#22580;&#21512;</span>
+  <span style="color: #3f6e74;">Matrix4f</span> <span style="color: #a0522d;">m</span>(<span style="color: #008b8b;">Matrix4f</span>::<span style="color: #3f6e74;">Identity</span>());
+
+  glPushMatrix();
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#12513;&#12531;&#12496;&#38306;&#25968;data&#12391;&#12289;4x4&#12398;&#34892;&#21015;&#12434;const float* &#12398;&#20516;&#12434;&#21462;&#12426;&#20986;&#12379;&#12427;</span>
+  glLoadMatrixf(m.data());
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#33394;&#12293;&#20966;&#29702;</span>
+
+  glPopMatrix();
+
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#12450;&#12501;&#12451;&#12531;&#22793;&#25563;&#34892;&#21015;&#12398;&#22580;&#21512;</span>
+  <span style="color: #3f6e74;">Affine3f</span> <span style="color: #a0522d;">affine</span>(<span style="color: #008b8b;">Affine3f</span>::<span style="color: #3f6e74;">Identity</span>());
+
+  glPushMatrix();
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#12513;&#12531;&#12496;&#38306;&#25968;data&#12391;&#12289;4x4&#12398;&#34892;&#21015;&#12434;const float* &#12398;&#20516;&#12434;&#21462;&#12426;&#20986;&#12379;&#12427;</span>
+  glLoadMatrixf(affine.data());
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#33394;&#12293;&#20966;&#29702;</span>
+
+  glPopMatrix();
+}
+</pre>
+</div>
+
+<p>
+DirectXの場合は「行」優先(row major)なので、<a href="#row_and_colmn">前述した方法で</a>定義した行列を使う必要があります。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-11" class="outline-2">
+<h2 id="sec-11"><span class="section-number-2">11</span> Arrayクラス</h2>
+<div class="outline-text-2" id="text-11">
+<p>
+Eigenのリファレンスにはこう書かれています。 "The Array class provides general-purpose arrays, as opposed to the Matrix class which is intended for linear algebra. Furthermore, the Array class provides an easy way to perform coefficient-wise operations, which might not have a linear algebraic meaning, such as adding a constant to every coefficient in the array or multiplying two arrays coefficient-wise."
+</p>
+
+<p>
+使ってみた感じ、「行列特有の計算は行わないで、各要素に対して一貫した計算を適用したい」場合に使えそうです。詳しくは、Eigenリファレンスマニュアル内「Tutorial page 3 - The Array class and coefficient-wise operations」を参照。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-c++"><span style="color: #483d8b;">#include</span> <span style="color: #C41A16;">&lt;iostream&gt;</span>
+<span style="color: #483d8b;">#include</span> <span style="color: #C41A16;">"Eigen/Core"</span>
+
+<span style="color: #3f6e74;">int</span> <span style="color: #0000ff;">main</span>() {
+  <span style="color: #a020f0;">using</span> <span style="color: #a020f0;">namespace</span> <span style="color: #008b8b;">Eigen</span>;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#12505;&#12463;&#12488;&#12523;&#30340;&#12394;&#23450;&#32681;</span>
+  <span style="color: #3f6e74;">Array3f</span> <span style="color: #a0522d;">a</span>(1.0f, 2.0f, 3.0f);
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#34892;&#21015;&#30340;&#12394;&#23450;&#32681;</span>
+  <span style="color: #3f6e74;">Array33f</span> <span style="color: #a0522d;">a1</span>;
+  a1 &lt;&lt; 1, 2, 3,
+  4, 5, 6,
+  7, 8, 9;
+
+  <span style="color: #3f6e74;">Array33f</span> <span style="color: #a0522d;">a2</span>;
+  a2 &lt;&lt; -1, -2, -3,
+  -4, -5, -6,
+  -7, -8, -9;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#21508;&#35201;&#32032;&#12372;&#12392;&#12395;&#35336;&#31639;&#12377;&#12427;</span>
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"a1 + a2\n"</span> &lt;&lt; a1 + a2 &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"a1 - a2\n"</span> &lt;&lt; a1 - a2 &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"a1 * a2\n"</span> &lt;&lt; a1 * a2 &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"a1 / a2\n"</span> &lt;&lt; a1 / a2 &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">&#21508;&#35201;&#32032;&#12372;&#12392;&#12398;&#31777;&#21336;&#12394;&#28436;&#31639;&#12418;&#28310;&#20633;&#12373;&#12428;&#12390;&#12356;&#12427;</span>
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"a1.sqrt()\n"</span> &lt;&lt; a1.sqrt() &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"a2.abs()\n"</span> &lt;&lt; a2.abs() &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+
+  <span style="color: #3f6e74;">Matrix3f</span> <span style="color: #a0522d;">m</span>;
+  m &lt;&lt; 9, 8, 7,
+       6, 5, 4,
+       3, 2, 1;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">Matrix * Array &#12399;&#12289;Matrix&#12398;array&#12513;&#12477;&#12483;&#12489;&#12391;&#22793;&#25563;&#12375;&#12390;&#12363;&#12425;</span>
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"m * a1\n"</span> &lt;&lt; m.array() * a1 &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+
+  <span style="color: #007400;">// </span><span style="color: #007400;">Array -&gt; Matrix &#12418;&#21487;&#33021;</span>
+  <span style="color: #3f6e74;">Matrix3f</span> <span style="color: #a0522d;">result</span>;
+  result = (m.array() * a1).matrix();
+  <span style="color: #008b8b;">std</span>::cout &lt;&lt; <span style="color: #C41A16;">"m * a1\n"</span> &lt;&lt; result &lt;&lt; <span style="color: #008b8b;">std</span>::endl;
+}
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-12" class="outline-2">
+<h2 id="sec-12"><span class="section-number-2">12</span> リファレンスマニュアル</h2>
+<div class="outline-text-2" id="text-12">
+<p>
+同梱のeigen-3.2.zipを解凍、eigen-3.2/doc/html/index.html が、Eigenのリファレンスマニュアルです。より詳しいチュートリアルや、APIの詳細については、こちらを参照のこと。英語だからと諦めないで、じっくりと取り込んでみてください。
+</p>
+
+
+<div class="figure">
+<p><img src="images/photo2.png" alt="photo2.png" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-13" class="outline-2">
+<h2 id="sec-13"><span class="section-number-2">13</span> あわせて読みたい</h2>
+<div class="outline-text-2" id="text-13">
+<ul class="org-ul">
+<li><b>Eigen公式サイト ⇒<a href="http://eigen.tuxfamily.org/index.php?title=Main_Page">http://eigen.tuxfamily.org/index.php?title=Main_Page</a></b><br  />
+    より詳しい情報や、最新のリリースの関しては、公式サイトを参照してください
+</li>
+
+<li><b>Eigen C++で線形代数を ⇒<a href="http://www.singularpoint.org/blog/c/eigen_1/">http://www.singularpoint.org/blog/c/eigen_1/</a></b><br  />
+    有志の方のわかりやすいサンプル集です。
+</li>
+</ul>
+</div>
+</div>
+</div>
+</body>
+</html>
